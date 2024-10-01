@@ -19,16 +19,16 @@ const Sun = () => {
         <meshStandardMaterial
           color="yellow"
           emissive="yellow"
-          emissiveIntensity={1.5}
+          emissiveIntensity={2.0} // Higher value for a brighter sun
         />
       </mesh>
-
+      {/* Optional glow effect for the sun */}
       <mesh>
-        <sphereGeometry args={[1.2, 64, 64]} />
+        <sphereGeometry args={[1.5, 64, 64]} />
         <meshBasicMaterial
-          color="#ffcc00"
+          color="#ffcc00" // Slightly orange for a glowing effect
           transparent
-          opacity={0.4}
+          opacity={0.5}
           depthWrite={false}
         />
       </mesh>
