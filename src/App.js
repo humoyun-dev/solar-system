@@ -1,7 +1,7 @@
 // src/App.js
 import React, { useRef, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Stars, Line } from "@react-three/drei";
 import Sun from "./Sun";
 import Planet from "./Planet";
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -34,7 +34,7 @@ function App() {
       name: "Earth",
       size: 0.6,
       textureUrl: "/planets/earth.jpg",
-      distance: 6,
+      distance: 7,
       speed: 0.017 / 10,
       hasRings: false,
       moons: [{ name: "Moon", size: 0.1, distance: 0.8, speed: 0.1 / 10 }],
@@ -124,6 +124,18 @@ function App() {
     };
   }, []);
 
+  // Function to draw a circular orbit line
+  const drawOrbit = (radius, segments = 100) => {
+    const points = [];
+    for (let i = 0; i <= segments; i++) {
+      const angle = (i / segments) * Math.PI * 2; // Full circle
+      const x = radius * Math.cos(angle); // X-axis position
+      const z = radius * Math.sin(angle); // Z-axis position
+      points.push([x, 0, z]); // Set Y to 0 for a horizontal orbit
+    }
+    return points;
+  };
+
   return (
     <div style={{ height: "100vh", backgroundColor: "#000" }}>
       <Canvas camera={{ position: [0, 0, 30], fov: 60 }}>
@@ -134,17 +146,26 @@ function App() {
         {/* Sun */}
         <Sun />
 
-        {/* Render planets */}
+        {/* Render planets and their orbits */}
         {planets.map((planet, index) => (
-          <Planet
-            key={index}
-            name={planet.name}
-            size={planet.size}
-            textureUrl={planet.textureUrl}
-            distance={planet.distance}
-            speed={planet.speed}
-            moons={planet.moons}
-          />
+          <React.Fragment key={index}>
+            {/* Planetary Orbit Line */}
+            <Line
+              points={drawOrbit(planet.distance)} // Call drawOrbit function
+              color="gray" // Set line color
+              lineWidth={1} // Set line width
+              // dashed={true} // Set dashed line
+            />
+            {/* Planet */}
+            <Planet
+              name={planet.name}
+              size={planet.size}
+              textureUrl={planet.textureUrl}
+              distance={planet.distance}
+              speed={planet.speed}
+              moons={planet.moons}
+            />
+          </React.Fragment>
         ))}
 
         {/* Stars */}
@@ -159,7 +180,7 @@ function App() {
 
         {/* Post-processing effects */}
         <EffectComposer>
-          <Bloom intensity={1.5} />
+          <Bloom intensity={1.5}/>
         </EffectComposer>
 
         {/* Orbit controls */}
