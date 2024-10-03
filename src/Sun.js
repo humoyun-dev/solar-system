@@ -1,9 +1,17 @@
 // Sun.js
 import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three';
 
 const Sun = () => {
   const sunRef = useRef();
+
+  // Load your sun texture, add error handling
+  const texture = useLoader(TextureLoader, '/planets/sun.jpg', (texture) => {
+    console.log('Texture loaded successfully:', texture);
+  }, (error) => {
+    console.error('Error loading texture:', error);
+  });
 
   // Rotate the sun for a dynamic effect
   useFrame(() => {
@@ -15,21 +23,12 @@ const Sun = () => {
   return (
     <>
       <mesh ref={sunRef}>
-        <sphereGeometry args={[1, 64, 64]} />
+        <sphereGeometry args={[3, 64, 64]} />
         <meshStandardMaterial
-          color="yellow"
-          emissive="yellow"
-          emissiveIntensity={2.0} // Higher value for a brighter sun
-        />
-      </mesh>
-      {/* Optional glow effect for the sun */}
-      <mesh>
-        <sphereGeometry args={[1.5, 64, 64]} />
-        <meshBasicMaterial
-          color="#ffcc00" // Slightly orange for a glowing effect
-          transparent
-          opacity={0.5}
-          depthWrite={false}
+          map={texture} // Apply the texture to the sun
+          color="#ffffff" // Set to white to lighten the texture
+          transparent={false} // Ensure it is not transparent
+          opacity={1} // Full opacity
         />
       </mesh>
     </>

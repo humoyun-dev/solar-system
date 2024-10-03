@@ -1,27 +1,56 @@
-// Planet.js
-import React, { useRef } from 'react';
+// src/Planet.js
+import React, { useRef, useMemo } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
+import { Line } from '@react-three/drei';
+import Moon from './Moons';
 
-const Planet = ({ name, size, textureUrl, distance, speed, hasRings, moons }) => {
+const Planet = ({
+  name,
+  size,
+  textureUrl,
+  eccentricity,
+  inclination,
+  sma,
+  speed,
+  raan,
+  tau,
+  hasRings,
+  moons,
+}) => {
   const meshRef = useRef();
-  const angleRef = useRef(Math.random() * Math.PI * 2);
-
-  // Load the planet texture
+  const angleRef = useRef(tau);
   const texture = useLoader(TextureLoader, textureUrl);
 
-  // Rotate the planet around the "Sun"
+  // Calculate the position of the planet in its orbit
   useFrame(() => {
-    if (meshRef.current) { // Check if meshRef.current is defined
+    if (meshRef.current) {
       angleRef.current += speed;
-      meshRef.current.position.x = Math.cos(angleRef.current) * distance;
-      meshRef.current.position.z = Math.sin(angleRef.current) * distance;
+      const x = sma * (Math.cos(angleRef.current) - eccentricity); // X position
+      const y = Math.sin(angleRef.current) * 0.1; // Tilt effect
+      const z = sma * Math.sqrt(1 - eccentricity ** 2) * Math.sin(angleRef.current); // Z position
+      meshRef.current.position.set(x, y, z);
     }
   });
 
+  // Calculate orbital points only once and store them
+  const orbitPoints = useMemo(() => {
+    const points = [];
+    const segments = 100; // Number of segments for the orbit line
+    for (let i = 0; i <= segments; i++) {
+      const angle = (i / segments) * Math.PI * 2; // Full circle
+      const x = sma * (Math.cos(angle) - eccentricity); // X position for orbit
+      const y = Math.sin(angle) * 0.1; // Tilt effect for orbit
+      const z = sma * Math.sqrt(1 - eccentricity ** 2) * Math.sin(angle); // Z position for orbit
+      points.push([x, y, z]);
+    }
+    return points;
+  }, [eccentricity, sma]);
+
   return (
-    <group>
-      {/* Main planet mesh */}
+    <group rotation={[inclination * (Math.PI / 180), raan * (Math.PI / 180), 0]}>
+      {/* Draw the orbital path */}
+      <Line points={orbitPoints} color="#3f3f46" lineWidth={1} />
       <mesh ref={meshRef}>
         <sphereGeometry args={[size, 64, 64]} />
         <meshStandardMaterial map={texture} />
@@ -32,33 +61,17 @@ const Planet = ({ name, size, textureUrl, distance, speed, hasRings, moons }) =>
           </mesh>
         )}
       </mesh>
-
-      {moons && moons.map((moon, index) => (
-        <Moon key={index} moon={moon} planetPosition={meshRef.current ? meshRef.current.position : null} />
-      ))}
+      {moons.map((moon, index) => (
+          <Moon
+            key={index}
+            moon={moon}
+            planetPosition={meshRef.current ? meshRef.current.position : null}
+            planetEccentricity={eccentricity}
+            planetSma={sma}
+            planetSpeed={speed}
+          />
+        ))}
     </group>
-  );
-};
-
-// Moon component
-const Moon = ({ moon, planetPosition }) => {
-  const moonRef = useRef();
-  const moonAngleRef = useRef(Math.random() * Math.PI * 2);
-
-  useFrame(() => {
-    if (moonRef.current && planetPosition) { // Check if moonRef.current and planetPosition are defined
-      moonAngleRef.current += moon.speed;
-      const moonX = Math.cos(moonAngleRef.current) * moon.distance + planetPosition.x; // Add planet's position
-      const moonZ = Math.sin(moonAngleRef.current) * moon.distance + planetPosition.z; // Add planet's position
-      moonRef.current.position.set(moonX, 0, moonZ);
-    }
-  });
-
-  return (
-    <mesh ref={moonRef}>
-      <sphereGeometry args={[moon.size, 32, 32]} />
-      <meshStandardMaterial color="gray" />
-    </mesh>
   );
 };
 
