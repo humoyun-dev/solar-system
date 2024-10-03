@@ -3,7 +3,7 @@ export const planets = [
       name: "Mercury",
       size: 0.3,
       textureUrl: "/planets/mercury.jpg",
-      distance: 6, // Increased from 3 to 6
+      distance: 6, 
       speed: 0.003,
       hasRings: false,
       moons: [],
@@ -17,7 +17,7 @@ export const planets = [
       name: "Venus",
       size: 0.5,
       textureUrl: "/planets/venus.jpg",
-      distance: 10, // Increased from 5 to 10
+      distance: 10,
       speed: 0.002,
       hasRings: false,
       moons: [],
@@ -31,7 +31,7 @@ export const planets = [
       name: "Earth",
       size: 0.6,
       textureUrl: "/planets/earth.jpg",
-      distance: 14, // Increased from 7 to 14
+      distance: 14,
       speed: 0.0017,
       hasRings: false,
       moons: [{ name: "Moon", size: 0.1, distance: 0.8, speed: 0.01 }],
@@ -45,7 +45,7 @@ export const planets = [
       name: "Mars",
       size: 0.4,
       textureUrl: "/planets/mars.jpg",
-      distance: 16, // Increased from 8 to 16
+      distance: 16,
       speed: 0.0015,
       hasRings: false,
       moons: [
@@ -62,7 +62,7 @@ export const planets = [
       name: "Jupiter",
       size: 1.2,
       textureUrl: "/planets/jupiter.jpg",
-      distance: 18, // Increased from 9 to 18
+      distance: 18,
       speed: 0.001,
       hasRings: false,
       moons: [
@@ -81,7 +81,7 @@ export const planets = [
       name: "Saturn",
       size: 1.0,
       textureUrl: "/planets/saturn.jpg",
-      distance: 22, // Increased from 11 to 22
+      distance: 22,
       speed: 0.0008,
       hasRings: true,
       moons: [
@@ -100,7 +100,7 @@ export const planets = [
       name: "Uranus",
       size: 0.7,
       textureUrl: "/planets/uranus.jpg",
-      distance: 30, // Increased from 16 to 30
+      distance: 30,
       speed: 0.0006,
       hasRings: true,
       moons: [
@@ -119,7 +119,7 @@ export const planets = [
       name: "Neptune",
       size: 0.7,
       textureUrl: "/planets/neptune.jpg",
-      distance: 34, // Increased from 15 to 34
+      distance: 34,
       speed: 0.0005,
       hasRings: false,
       moons: [{ name: "Triton", size: 0.09, distance: 1.2, speed: 0.01 }],

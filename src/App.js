@@ -35,14 +35,13 @@ function App() {
 
         {planets.map((planet, index) => (
           <React.Fragment key={index}>
-            {/* Render each planet */}
             <Planet
               name={planet.name}
               size={planet.size}
               textureUrl={planet.textureUrl}
               eccentricity={planet.eccentricity}
               inclination={planet.inclination}
-              sma={planet.distance} // Use distance as SMA
+              sma={planet.distance}
               speed={planet.speed}
               raan={planet.raan}
               tau={planet.tau}

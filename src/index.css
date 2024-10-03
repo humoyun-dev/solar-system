@@ -1,5 +1,5 @@
 body {
   margin: 0;
-  overflow: hidden; /* Prevent scroll bars */
-  background-color: #000; /* Background color */
+  overflow: hidden;
+  background-color: #000;
 }
